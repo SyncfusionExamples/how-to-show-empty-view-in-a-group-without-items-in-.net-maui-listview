@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MAUIListView.Grouping"
+             xmlns:local="clr-namespace:MAUIListView"
+             xmlns:listView="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
+             xmlns:dataDource="clr-namespace:Syncfusion.Maui.DataSource;assembly=Syncfusion.Maui.DataSource"
+             Title="Grouping">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:EmptyViewHeightConverter x:Key="EmptyViewHeightConverter"/>
+            <local:EmptyViewVisibilityConverter x:Key="EmptyViewVisibilityConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <ContentPage.BindingContext>
+        <local:ContactsViewModel x:Name="viewModel"/>
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Content>
+        <listView:SfListView x:Name="listView" AutoFitMode="DynamicHeight" ItemTapped="listView_ItemTapped"
+                             SelectionBackground="Transparent" 
+                             ItemsSource="{Binding ContactsInfo}">
+            <listView:SfListView.ItemsLayout>
+                <listView:GridLayout SpanCount="3"/>
+            </listView:SfListView.ItemsLayout>
+            
+            <listView:SfListView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <Grid BackgroundColor="Teal" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
+                        <Label Text="{Binding Key}"
+                                FontSize="22"
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                VerticalOptions="Center"
+                                Margin="10,0,0,0" />
+                        <Image Grid.Column="1" Source="addcontact.png" Margin="0,0,20,0"
+                               HeightRequest="20" WidthRequest="20">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="AddContact_Tapped" CommandParameter="{Binding .}"/>
+                            </Image.GestureRecognizers>
+                        </Image>
+                        <Grid x:Name="groupEmptyView" BackgroundColor="LightCoral" Grid.Row="1" Grid.ColumnSpan="2"
+                              IsVisible="{Binding . , Converter= {StaticResource EmptyViewHeightConverter}}" 
+                              HeightRequest="{Binding ., Converter={StaticResource EmptyViewHeightConverter}}">
+
+                            <Label VerticalOptions="Center" VerticalTextAlignment="Center"
+                                   HorizontalOptions="Center" HorizontalTextAlignment="Center"
+                                   Text="No Items"/>
+                        </Grid>
+                    </Grid>                    
+                </DataTemplate>
+            </listView:SfListView.GroupHeaderTemplate>
+            
+            <listView:SfListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid RowDefinitions="Auto,Auto" Margin="10,0,0,0">
+                        <Label Text="{Binding ContactName}"/>
+                        <Label Grid.Row="1" Text="{Binding ContactNumber}"/>                        
+                    </Grid>
+                </DataTemplate>
+            </listView:SfListView.ItemTemplate>
+        </listView:SfListView>
+    </ContentPage.Content>
+</ContentPage>
